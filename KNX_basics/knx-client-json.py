@@ -200,8 +200,12 @@ def main():
         }
 
     json_payload = json.dumps(dict_payload)
+
+    print(json_payload)
     
     payload_data = json.loads(json_payload)
+
+    print(payload_data)
     
     knx_action = payload_data['action']
     knx_floor = payload_data['floor']
@@ -210,7 +214,7 @@ def main():
     knx_size = payload_data['size']
     knx_apci = payload_data['apci']
 
-    group_address = knx_action + '/' + knx_floor + '/' + knx_bloc
+    group_address = str(knx_action) + '/' + str(knx_floor) + '/' + str(knx_bloc)
     knx_payload = [knx_data, knx_size, knx_apci]
 
     endpoint_ip = '0.0.0.0'

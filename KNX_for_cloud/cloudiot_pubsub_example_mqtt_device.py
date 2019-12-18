@@ -223,12 +223,19 @@ def main():
 
     client.loop_start()
 
-    # This is the topic that the device will publish telemetry events
-    # (temperature data) to.
-    mqtt_telemetry_topic = '/devices/{}/events'.format(args.device_id)
+##    # This is the topic that the device will publish telemetry events
+##    # (temperature data) to.
+##    mqtt_telemetry_topic = '/devices/{}/events'.format(args.device_id)
+##
+##    # This is the topic that the device will receive configuration updates on.
+##    mqtt_config_topic = '/devices/{}/config'.format(args.device_id)
 
-    # This is the topic that the device will receive configuration updates on.
+    print("Reaching telemetry : ", end = '')
+    mqtt_telemetry_topic = '/devices/{}/events'.format(args.device_id)
+    print(mqtt_telemetry_topic)
+    print("Reaching config : ", end = '')
     mqtt_config_topic = '/devices/{}/config'.format(args.device_id)
+    print(mqtt_config_topic)
 
     # Wait up to 5 seconds for the device to connect.
     device.wait_for_connection(5)
