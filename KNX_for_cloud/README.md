@@ -1,7 +1,7 @@
 *********************************************************************
 INSTALL KNXNET:
 *************************************************
-On first use:
+***On first use:
 
 sudo apt-get update
 
@@ -11,7 +11,7 @@ cd knxnet_iot
 
 sudo python3 setup.py install
 *************************************************
-Next uses:
+***Next uses:
 
 cd knxnet_iot
 
@@ -20,7 +20,7 @@ sudo python3 setup.py install
 *********************************************************************
 INSTALL REQUIREMENTS IN VIRTUAL ENV:
 *************************************************
-in root folder (KNX_for_cloud)
+***In root folder (KNX_for_cloud)
 
 virtualenv env
 
