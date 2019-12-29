@@ -141,8 +141,6 @@ def parse_command_line_args():
     
     parser.add_argument(
         'action',
-        type = int,
-        choices = [0,1,3,4],
         help = textwrap.dedent('''\
         Type of command (action) sent to the actuator:
            0: Control of the radiator\'s valves (payload: 0 to 255)
@@ -153,12 +151,10 @@ def parse_command_line_args():
     
     parser.add_argument(
         'floor',
-        type = int,
         help = 'Floor where the targeted device is located')
 
     parser.add_argument(
         'bloc',
-        type = int,
         help = 'Bloc to which the device belongs')
 
     parser.add_argument(

@@ -69,12 +69,12 @@ def disc_req(sock, channel_id, control_endpoint, gateway_ip, gateway_port):
 def KNX_rw(data_endpoint, control_endpoint, gateway_ip, gateway_port, group_address, payload):
     KNX_out = {}
 
-    print(data_endpoint)
-    print(control_endpoint)
-    print(gateway_ip)
-    print(gateway_port)
-    print(group_address)
-    print(payload)
+##    print(data_endpoint)
+##    print(control_endpoint)
+##    print(gateway_ip)
+##    print(gateway_port)
+##    print(group_address)
+##    print(payload)
     
     # Socket creation
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -362,8 +362,6 @@ class Device(object):
 
         for blinds_target, blinds_val in zip(self.blinds_targets, self.blinds):
             update(group_address = '1/' + blinds_target, payload = [blinds_val, 1, 2])
-
-        print('HERE')
         
         for valves_target, valves_val in zip(self.valves_targets, self.valves):
             update(group_address = '0/' + blinds_target, payload = [valves_val, 2, 2])
@@ -523,14 +521,15 @@ def main():
 
         ##############################################################
         ## Preparing message data in case of an action on blinds or valves
+        payload_command = 'No command received'
         if device.payload.split('/')[0] == 1 or device.payload.split('/')[0] == 3:
-            payload_command_blinds = {
+            payload_command = {
                 'Error code' : device.KNX_err,
                 'Blinds id' : device.bloc,
                 'Floor' : device.floor,
                 'Blinds setpoint' : device.payload[0]}
         if device.payload.split('/')[0] == 0:
-            payload_command_blinds = {
+            payload_command = {
                 'Error code' : device.KNX_err,
                 'Valve id' : device.bloc,
                 'Floor' : device.floor,
@@ -547,16 +546,19 @@ def main():
             payload_current_status['Valve {}'.format(valves_target.split('/')[1])] ='Reading status successful with data {}'.format(valves_val)
         ##############################################################
 
-        print(payload_command_blinds)
-        print(payload_current_status)
+        ##print(payload_command)
+        ##print(payload_current_status)
 
         ##DISSOCIATE MESSAGES:
         ##01.CONTINUOUS REFRESH (READ STATUS)
         ##02.MESSAGE ON USER ACTION
 
-        payload_publish = json.dumps([
-            payload_command_blinds,
-            payload_current_status])
+        if payload_command == 'No command received':
+            payload_publish = json.dumps([payload_current_status])
+        else:
+            payload_publish = json.dumps([
+                payload_command,
+                payload_current_status])
         
         print('Publishing payload', payload_publish)
         client.publish(mqtt_telemetry_topic, payload_publish, qos = 1)
