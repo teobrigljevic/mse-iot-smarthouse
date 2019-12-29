@@ -1,0 +1,12 @@
+## SERVER LISTEN
+
+set GOOGLE_APPLICATION_CREDENTIALS=C:\Users\Antonio\Desktop\python-docs-samples\iot\api-client\end_to_end_example\service_account.json
+
+export GOOGLE_APPLICATION_CREDENTIALS="/home/teo/IoT/SmartHouse/python-docs-samples/iot/api-client/end_to_end_example/service_account.json"
+
+python cloudiot_pubsub_example_server.py --project_id=smarthouseiot-261017 --pubsub_subscription=mymessages --service_account_json=service_account.json
+
+
+## CLIENT PUBLISH
+
+python cloudiot_pubsub_example_mqtt_device.py --project_id smarthouseiot-261017 --registry_id zwave --device_id zPIR --private_key_file rsa_private.pem --algorithm RS256 --message_type event --num_messages 1 --cloud_region europe-west1
