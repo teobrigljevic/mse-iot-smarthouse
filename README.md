@@ -12,3 +12,11 @@ The additional GoogleCloud folder contains the resources and related instruction
 # Context of the project
 
 This project is realised as a final project for the HES-SO MSE Internet of Things module. It is the results of the combined efforts of T.B. and A.G.P., completed in January 2020.
+
+# Overview of the developed and implemented solutions
+
+![Rooms](Media/Rooms.png)
+
+![GeneralOverview](Media/GlobalProcess.png)
+
+![DetailedOverview](Media/DetailedProcess.png)
