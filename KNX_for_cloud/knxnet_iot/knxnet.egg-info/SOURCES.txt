@@ -1,9 +1,0 @@
-README.md
-setup.py
-knxnet/__init__.py
-knxnet/knxnet.py
-knxnet/utils.py
-knxnet.egg-info/PKG-INFO
-knxnet.egg-info/SOURCES.txt
-knxnet.egg-info/dependency_links.txt
-knxnet.egg-info/top_level.txt
