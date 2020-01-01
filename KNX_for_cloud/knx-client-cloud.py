@@ -82,24 +82,25 @@ def KNX_rw(data_endpoint, control_endpoint, gateway_ip, gateway_port, group_addr
 
     # Sending connection request - Step 1
     conn_req(sock, data_endpoint, control_endpoint, gateway_ip, gateway_port)
-    print("\nSending connection request...")
+    ##print("\nSending connection request...")
 
     # Recieving connection response - Step 2
     conn_gt_resp_object = recv_data(sock)
     conn_channel_id = conn_gt_resp_object.channel_id
-    print("Connection open, channel ID is : {}".format(conn_channel_id))
+    ##print("Connection open, channel ID is : {}".format(conn_channel_id))
 
     # Sending connection state request - Step 3
     conn_state_req(sock, conn_channel_id, control_endpoint, gateway_ip, gateway_port)
-    print("\nSending connection state request...")
+    ##print("\nSending connection state request...")
 
     # Recieving connection state response - Step 4
     conn_gt_resp_object = recv_data(sock)
     conn_state_resp = conn_gt_resp_object.status
     if conn_state_resp == 0:
-        print("Connection status is {}, continuing...".format(conn_state_resp))
+        a = 0
+        ##print("Connection status is {}, continuing...".format(conn_state_resp))
     else:
-        print("Connection status is {}, exiting...".format(conn_state_resp))
+        ##print("Connection status is {}, exiting...".format(conn_state_resp))
         KNX_out = {'Error code' : 'Connection status error : {}'.format(conn_state_resp)}
         return KNX_out
 
@@ -107,15 +108,16 @@ def KNX_rw(data_endpoint, control_endpoint, gateway_ip, gateway_port, group_addr
     dest_addr_group = knxnet.GroupAddress.from_str(group_address)
     data, data_size, apci = payload[0], payload[1], payload[2]
     tunn_req(sock, dest_addr_group, conn_channel_id, data, data_size, apci, gateway_ip, gateway_port)
-    print("\nSending tunnelling request...")
+    ##print("\nSending tunnelling request...")
 
     # Receiving tunnelling acknowledgment - Step 6
     tunn_gt_ack_object = recv_data(sock)
     tunn_gt_ack_status = tunn_gt_ack_object.status
     if tunn_gt_ack_status == 0:
-        print("Tunnelling status is {}, continuing...".format(tunn_gt_ack_status))
+        a = 0
+        ##print("Tunnelling status is {}, continuing...".format(tunn_gt_ack_status))
     else:
-        print("Tunneling status is {}, exiting...".format(tunn_gt_ack_status))
+        ##print("Tunneling status is {}, exiting...".format(tunn_gt_ack_status))
         KNX_out = {'Error code' : 'Tunnelling status error : '.format(tunn_gt_ack_status)}
         return KNX_out
 
@@ -124,35 +126,36 @@ def KNX_rw(data_endpoint, control_endpoint, gateway_ip, gateway_port, group_addr
     tunn_gt_data_service = tunn_gt_req_object.data_service
     tunn_gt_seq_count = tunn_gt_req_object.sequence_counter
     if tunn_gt_data_service == 46:
-        print("\nGateway tunneling request is 0x{0:02x}, continuing...".format(tunn_gt_data_service))
+        a = 0
+        ##print("\nGateway tunneling request is 0x{0:02x}, continuing...".format(tunn_gt_data_service))
     else:
-        print("\nGateway tunneling request is not 0x(0:02x), exiting...".format(tunn_gt_data_service))
+        ##print("\nGateway tunneling request is not 0x(0:02x), exiting...".format(tunn_gt_data_service))
         KNX_out = {'Error code' : 'Gateway tunnelling status error : '.format(tunn_gt_data_service)}
         return KNX_out
 
     # Sending tunnelling acknowledgment after successful comparison - Step 8
     tunn_cl_ack_status = 0
     tunn_ack(sock, conn_channel_id, tunn_cl_ack_status, tunn_gt_seq_count, gateway_ip, gateway_port)
-    print("Sending tunnelling acknowledgment with status 0.")
+    ##print("Sending tunnelling acknowledgment with status 0.")
 
     # When requesting state of blinds, second return of dataservice set
     if group_address[0] == '4':
         tunn_gt_req_object = recv_data(sock)
         tunn_gt_data = tunn_gt_req_object.data
-        print("\nSecond gateway tunneling request (reading the state of the blinds)")
-        print("The state of the blinds is {}, continuing...".format(tunn_gt_data))
+        ##print("\nSecond gateway tunneling request (reading the state of the blinds)")
+        ##print("The state of the blinds is {}, continuing...".format(tunn_gt_data))
         KNX_out = ['Blinds {}'.format(group_address.split('/')[2]), 'Reading status successful with data {}'.format(tunn_gt_data)]
 
     # Sending disconnect request - Step 9
     disc_req(sock, conn_channel_id, control_endpoint, gateway_ip, gateway_port)
-    print("\nSending disconnect request...")
+    ##print("\nSending disconnect request...")
 
     # Receiving disconnect response - Step 10
     disc_status = recv_data(sock).status
-    print("Disconnect response status is {}, disconnecting...".format(disc_status))
+    ##print("Disconnect response status is {}, disconnecting...".format(disc_status))
 
     # Ending and exiting the script
-    print("\nProtocol steps are complete. Have a nice day :)\n")
+    ##print("\nProtocol steps are complete. Have a nice day :)\n")
     time.sleep(1)
     if len(KNX_out) == 0:
         return {'Error code' : 'Controlling devices successful'}
@@ -383,6 +386,9 @@ class Device(object):
             
             self.blinds_targets = payload['targets']['blinds']
             self.valves_targets = payload['targets']['valves']
+
+            print(self.blinds_targets)
+            
             self.room_config()
 
             print()
@@ -458,6 +464,8 @@ class Device(object):
 
     def on_message(self, unused_client, unused_userdata, message):
 
+        print('HERE')
+
         raw_payload = message.payload.decode('utf-8')
         payload = json.loads(raw_payload)
         print('Received message \'{}\' on topic \'{}\' with QOS {}'.
@@ -498,8 +506,12 @@ def main():
 
     mqtt_telemetry_topic = '/devices/{}/events'.format(args.device_id)
     mqtt_config_topic = '/devices/{}/config'.format(args.device_id)
+    mqtt_piRoom01_topic = '/devices/piRoom01/events'
+##    mqtt_room01_topic = '/projects/{}/topics/room01'.format(args.project_id)
     device.wait_for_connection(5)
-    client.subscribe(mqtt_config_topic, qos = 1)
+    client.subscribe((mqtt_config_topic, 1), (mqtt_piRoom01_topic, 1))
+    
+##    client.subscribe(mqtt_room01_topic, qos = 1)
 
     i = 1
     while True:
@@ -550,11 +562,11 @@ def main():
         ##print(payload_current_status)
 
         ##DISSOCIATE MESSAGES:
-        ##01.CONTINUOUS REFRESH (READ STATUS)
+        ##01.CONTINUOUS REFRESH (READ STATUS)   
         ##02.MESSAGE ON USER ACTION
 
         if payload_command == 'No command received':
-            payload_publish = json.dumps([payload_current_status])
+            payload_publish = json.dumps(payload_current_status)
         else:
             payload_publish = json.dumps([
                 payload_command,
