@@ -1,0 +1,3 @@
+[submodule "KNX/actuasim_iot"]
+	path = KNX/actuasim_iot
+	url = https://githepia.hesge.ch/adrienma.lescourt/actuasim_iot.git
