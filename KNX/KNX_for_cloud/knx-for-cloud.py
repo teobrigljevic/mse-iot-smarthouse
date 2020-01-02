@@ -101,7 +101,7 @@ def KNX_rw(data_endpoint, control_endpoint, gateway_ip, gateway_port, group_addr
         ##print("Connection status is {}, continuing...".format(conn_state_resp))
     else:
         ##print("Connection status is {}, exiting...".format(conn_state_resp))
-        KNX_out = {'Error code' : 'Connection status error : {}'.format(conn_state_resp)}
+        KNX_out = {'kErrorCode' : 'Connection status error : {}'.format(conn_state_resp)}
         return KNX_out
 
     # Sending tunnelling request - Step 5
@@ -118,7 +118,7 @@ def KNX_rw(data_endpoint, control_endpoint, gateway_ip, gateway_port, group_addr
         ##print("Tunnelling status is {}, continuing...".format(tunn_gt_ack_status))
     else:
         ##print("Tunneling status is {}, exiting...".format(tunn_gt_ack_status))
-        KNX_out = {'Error code' : 'Tunnelling status error : '.format(tunn_gt_ack_status)}
+        KNX_out = {'kErrorCode' : 'Tunnelling status error : '.format(tunn_gt_ack_status)}
         return KNX_out
 
     # Return of dataservice set as 0x2e (46) - Step 7
@@ -130,7 +130,7 @@ def KNX_rw(data_endpoint, control_endpoint, gateway_ip, gateway_port, group_addr
         ##print("\nGateway tunneling request is 0x{0:02x}, continuing...".format(tunn_gt_data_service))
     else:
         ##print("\nGateway tunneling request is not 0x(0:02x), exiting...".format(tunn_gt_data_service))
-        KNX_out = {'Error code' : 'Gateway tunnelling status error : '.format(tunn_gt_data_service)}
+        KNX_out = {'kErrorcode' : 'Gateway tunnelling status error : '.format(tunn_gt_data_service)}
         return KNX_out
 
     # Sending tunnelling acknowledgment after successful comparison - Step 8
@@ -159,7 +159,7 @@ def KNX_rw(data_endpoint, control_endpoint, gateway_ip, gateway_port, group_addr
     ##print("\nProtocol steps are complete. Have a nice day :)\n")
     time.sleep(1)
     if len(KNX_out) == 0:
-        return {'Error code' : 'Controlling devices successful'}
+        return {'kErrorCode' : 'Controlling devices successful'}
     return KNX_out
 
 ######################################################################
@@ -281,7 +281,7 @@ class Device(object):
         self.blinds = [-1]
         self.valves = [-1]
         
-        self.KNX_out = {'Error code' : 'Waiting on initialisation'}
+        self.KNX_out = {'kErrorCode' : 'Waiting on initialisation'}
         self.KNX_err = -1
         self.KNX_data = -1
 
@@ -344,7 +344,7 @@ class Device(object):
             self.payload = [valves_val, 2, 2]
             self.update(group_address = self.group_address, payload = self.payload)
             
-        self.KNX_out = {'Error code' : 'CONFIGURATION UPDATED'}
+        self.KNX_out = {'kErrorCode' : 'CONFIGURATION UPDATED'}
         self.init = 1
 
     def room_config(self):
@@ -365,7 +365,7 @@ class Device(object):
             self.payload = [valves_val, 2, 2]
             self.update(group_address = self.group_address, payload = self.payload)
 
-        self.KNX_out = {'Error code' : 'CONFIGURATION UPDATED'}
+        self.KNX_out = {'kErrorCode' : 'CONFIGURATION UPDATED'}
 
     def read_message(self, payload):
         
@@ -534,7 +534,7 @@ def main():
                 print('There is no configuration for this device. Waiting...')
                 while device.init == 0:
                     payload = json.dumps({
-                        'Error code' : 'NO CONFIGURATION'})
+                        'kErrorCode' : 'NO CONFIGURATION'})
                     client.publish(mqtt_telemetry_topic, payload, qos = 1)
                     time.sleep(10)
                 continue
@@ -565,7 +565,7 @@ def main():
                     valve_status['realVal'] = valves_val
                     payload_current_status[valve_id] = valve_status
 
-                payload_current_status['Error code'] = 'CURRENT STATUS'
+                payload_current_status['kErrorCode'] = 'CURRENT STATUS'
                 payload = json.dumps(payload_current_status)
                 print('Publishing payload : {}'.format(payload))
                 client.publish(mqtt_telemetry_topic, payload, qos = 1)
@@ -574,7 +574,7 @@ def main():
             ## Requesting command updates (automatic and manual)
             if device.init == 2:
                 print('Requesting command update')
-                payload = json.dumps({'Error code' : 'WAITING ON COMMAND'})
+                payload = json.dumps({'kErrorCode' : 'WAITING ON COMMAND'})
                 client.publish(mqtt_telemetry_topic, payload, qos = 1)
                 time.sleep(10)
 ##        ## Preparing message data in case of an action on blinds or valves
@@ -628,7 +628,7 @@ def main():
 
     except KeyboardInterrupt:
         print('\nRe-initialising device configuration')
-        payload = json.dumps({'Error code' : 'INTERRUPT REINIT'})
+        payload = json.dumps({'kErrorCode' : 'INTERRUPT REINIT'})
         client.publish(mqtt_telemetry_topic, payload, qos = 1)
         print('Re-initialisation done. Exiting.')
         client.disconnect()
