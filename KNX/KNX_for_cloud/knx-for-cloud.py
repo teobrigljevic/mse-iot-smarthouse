@@ -144,7 +144,7 @@ def KNX_rw(data_endpoint, control_endpoint, gateway_ip, gateway_port, group_addr
         tunn_gt_data = tunn_gt_req_object.data
         ##print("\nSecond gateway tunneling request (reading the state of the blinds)")
         ##print("The state of the blinds is {}, continuing...".format(tunn_gt_data))
-        blind_id = 'kBlind{:02d}'.format(int(group_address.split('/')[2]))
+        blind_id = 'blind{:02d}'.format(int(group_address.split('/')[2]))
         KNX_out = [blind_id, tunn_gt_data]
 
     # Sending disconnect request - Step 9
@@ -348,12 +348,6 @@ class Device(object):
         self.init = 1
 
     def room_config(self):
-        if self.blinds == [-1]:
-            self.blinds = self.blinds*len(self.blinds_targets)
-            self.blinds = [40 for blinds in self.blinds]
-        if self.valves == [-1]:
-            self.valves = self.valves*len(self.valves_targets)
-            self.valves = [10 for valves in self.valves]
 
         for blinds_target, blinds_val in zip(self.blinds_targets, self.blinds):
             self.group_address = '3/' + blinds_target
@@ -380,9 +374,14 @@ class Device(object):
             self.data_endpoint = (endpoint_ip, int(endpoint_port))
             self.control_endpoint = (endpoint_ip, int(endpoint_port))
 
-            self.blinds_targets = payload['targets']['blinds']
-            self.valves_targets = payload['targets']['valves']
-          
+            self.blinds_targets = payload['targets']['blinds']['id']
+            self.valves_targets = payload['targets']['valves']['id']
+            
+            if self.blinds == [-1]:
+                self.blinds = payload['targets']['blinds']['val']
+            if self.valves == [-1]:
+                self.valves = payload['targets']['valves']['val']
+
             self.room_config()
 
             print()
@@ -393,12 +392,14 @@ class Device(object):
                   .format(len(self.blinds_targets), len(self.valves_targets)))
 
         if payload['type'] == 'update':
-            set_blind = payload['data']['blinds']
-            if(set_blind != -1):
-                self.blinds = [set_blind for target in self.blinds_targets]
-            set_valve = payload['data']['valves']
-            if(set_valve != -1):
-                self.valves = [set_valve for target in self.valves_targets]
+            set_blinds = list(payload['data']['blinds'])
+            for i in range(len(set_blinds)):
+                if(set_blinds[i] != -1):
+                    self.blinds[i] = set_blinds[i]
+            set_valves = list(payload['data']['valves'])
+            for i in range(len(set_valves)):
+                if(set_valves[i] != -1):
+                    self.valves[i] = set_valves[i]
 
             self.update_setpoints()
             print()
@@ -555,14 +556,14 @@ def main():
                 for blinds_targets, blinds_val in zip(device.blinds_targets, device.blinds):
                     blind_status = {}
                     knx_out = device.update(group_address = '4/' + blinds_targets, payload = [blinds_val, 2, 2])
-                    blind_status['setVal'] = blinds_val
-                    blind_status['realVal'] = knx_out[1]
+                    blind_status['set_val'] = blinds_val
+                    blind_status['real_val'] = knx_out[1]
                     payload_current_status[knx_out[0]] = blind_status
                 for valves_target, valves_val in zip(device.valves_targets, device.valves):
                     valve_status = {}
-                    valve_id = 'kValve{:02d}'.format(int(valves_target.split('/')[1]))
-                    valve_status['setVal'] = valves_val
-                    valve_status['realVal'] = valves_val
+                    valve_id = 'valve{:02d}'.format(int(valves_target.split('/')[1]))
+                    valve_status['set_val'] = valves_val
+                    valve_status['real_val'] = valves_val
                     payload_current_status[valve_id] = valve_status
 
                 payload_current_status['kErrorCode'] = 'CURRENT STATUS'
