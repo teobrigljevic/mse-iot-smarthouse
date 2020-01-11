@@ -28,7 +28,7 @@ source env/bin/activate
 pip3 install -r requirements.txt
 *********************************************************************
 *********************************************************************
-RUNNING THE KNX-CLIENT.PY SCRIPT:
+RUNNING THE KNX-FOR-CLOUD.PY SCRIPT:
 *************************************************
 python3 knx-client-cloud.py PROJECT_ID REGISTRY_ID DEVICE_ID TOPIC KEY_PATH ALGORITHM
 
