@@ -214,6 +214,10 @@ def parse_command_line_args():
         help = 'Cloud IoT device ID')
 
     parser.add_argument(
+        'topic',
+        help = 'Cloud Pub/Sub topic')
+
+    parser.add_argument(
         'private_key_file',
         help = 'Path to private key file')
 
@@ -267,6 +271,7 @@ class Device(object):
 
         self.init = 0
         self.connected = False
+        self.room = -1
 
         self.blinds_targets = ''
         self.valves_targets = ''
@@ -406,46 +411,6 @@ class Device(object):
             print("*****Configuring blinds with data {} and valves with data {}.*****"
                   .format(self.blinds, self.valves))
 
-##        if payload['type'] == 'sensor_data':
-##            self.presence = payload['data']['presence']
-##            self.temperature = payload['data']['temperature']
-##            self.luminosity = payload['data']['luminosity']
-##            self.humidity = payload['data']['humidity']
-##
-##            print()
-##            print("Person in room :       ".format(self.presence))
-##            print("Measured temperature : ".format(self.temperature))
-##            print("Measured luminosity :  ".format(self.luminosity))
-##            print("Measured humidity :    ".format(self.humidity))
-##
-##            self.update_setpoints()
-##
-##        if payload['type'] == 'user_setpoint':
-##            for setpoint in payload['setpoints']:
-##                if 'temperature' in setpoint:
-##                    self.TEMP_HIGH = setpoint['temperature']
-##                if 'luminosity' in setpoint:
-##                    self.LUM_LOW = setpoint['luminosity']
-##                if 'humidity' in setpoint:
-##                    self.HUM_HIGH = setpoint['humidity']
-##
-##        if payload['type'] == 'user_action':
-##            knx_action = payload['command']['action']
-##            knx_floor = payload['command']['floor']
-##            knx_bloc = payload['command']['bloc']
-##            knx_data = payload['command']['data']
-##            knx_size = payload['command']['size']
-##            knx_apci = payload['command']['apci']
-##
-##            self.group_address = knx_action + '/' + knx_floor + '/' + knx_bloc
-##            self.payload = [int(knx_data), int(knx_size), int(knx_apci)]
-##
-##            print()
-##            print("Group address :       {:>20}".format(self.group_address))
-##            print("Payload :             {:>20}".format(str(self.payload)[1:-1]))
-##
-##            self.KNX_out = self.update()
-
     def wait_for_connection(self, timeout):
         total_time = 0
         while not self.connected and total_time < timeout:
@@ -474,20 +439,25 @@ class Device(object):
 
         raw_payload = message.payload.decode('utf-8')
 
-        if(raw_payload == ''):
+        if raw_payload == '':
             print('No message received yet, waiting...')
             return 0
         else:
-            print('Received message :\n\'{}\'\n   on topic : \'{}\'\n   with QOS : {}'.
-              format(raw_payload, message.topic, str(message.qos)))
             payload = json.loads(raw_payload)
-            if self.init == 0:
-                self.init = 1
+            if(self.room != payload['room']):
+                print('No message targetting this room received yet, waiting...')
+                return 0
+            else:
+                print('Received message :\n\'{}\'\n   on topic : \'{}\'\n   with QOS : {}'.
+                      format(raw_payload, message.topic, str(message.qos)))
+                ##payload = json.loads(raw_payload)
+                if self.init == 0:
+                    self.init = 1
 
-        self.read_message(payload)
+                self.read_message(payload)
 
-        self.KNX_err = self.KNX_out[0]
-        self.KNX_data = self.KNX_out[1] if len(self.KNX_out) > 1 else 'EMPTY'
+                self.KNX_err = self.KNX_out[0]
+                self.KNX_data = self.KNX_out[1] if len(self.KNX_out) > 1 else 'EMPTY'
 
 def main():
     
@@ -514,10 +484,11 @@ def main():
 
     client.loop_start()
 
-    mqtt_telemetry_topic = '/devices/{}/events/room01k'.format(args.device_id)
+    mqtt_telemetry_topic = '/devices/{}/events/{}'.format(args.device_id, args.topic)
     mqtt_config_topic = '/devices/{}/config'.format(args.device_id)
     device.wait_for_connection(5)
     client.subscribe(mqtt_config_topic, 0)
+    device.room = int(args.topic[-2])
 
     device.init = 0
 
@@ -528,7 +499,6 @@ def main():
             i += 1
             time.sleep(5)
             payload_command_blinds = ''
-
             ##############################################################
             ## Waiting for the first configuration message
             if device.init == 0:
@@ -578,54 +548,6 @@ def main():
                 payload = json.dumps({'kErrorCode' : 'WAITING ON COMMAND'})
                 client.publish(mqtt_telemetry_topic, payload, qos = 1)
                 time.sleep(10)
-##        ## Preparing message data in case of an action on blinds or valves
-##        payload_command = 'No command received'
-##        if device.payload.split('/')[0] == 1 or device.payload.split('/')[0] == 3:
-##            payload_command = {
-##                'Error code' : device.KNX_err,
-##                'Blinds id' : device.bloc,
-##                'Floor' : device.floor,
-##                'Blinds setpoint' : device.payload[0]}
-##        if device.payload.split('/')[0] == 0:
-##            payload_command = {
-##                'Error code' : device.KNX_err,
-##                'Valve id' : device.bloc,
-##                'Floor' : device.floor,
-##                'Valve setpoint' : device.payload[0]}
-##        ##############################################################
-##
-##        ##############################################################
-##        ## "Reading" the status of the targets (based on the last command for the valves)
-##        payload_current_status = {}
-##        for blinds_targets in device.blinds_targets:
-##            knx_out = device.update(group_address = '4/' + blinds_targets, payload = [0, 1, 2])
-##            payload_current_status[knx_out[0]] = knx_out[1]
-##        for valves_target, valves_val in zip(device.valves_targets, device.valves):
-##            payload_current_status['Valve {}'.format(valves_target.split('/')[1])] ='Reading status successful with data {}'.format(valves_val)
-##        ##############################################################
-##
-##        ##print(payload_command)
-##        ##print(payload_current_status)
-##
-##        ##DISSOCIATE MESSAGES:
-##        ##01.CONTINUOUS REFRESH (READ STATUS)   
-##        ##02.MESSAGE ON USER ACTION
-##
-##        if payload_command == 'No command received':
-##            payload_publish = json.dumps(payload_current_status)
-##        else:
-##            payload_publish = json.dumps([
-##                payload_command,
-##                payload_current_status])
-##        
-##        print('Publishing payload', payload_publish)
-##        client.publish(mqtt_telemetry_topic, payload_publish, qos = 1)
-##        time.sleep(5)
-
-##    client.loop_start()
-##    client.disconnect()
-##    client.loop_stop()
-##    print('Finished loop successfully. Goodbye!')
 
     except KeyboardInterrupt:
         print('\nRe-initialising device configuration')
@@ -639,28 +561,6 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-##    dict_payload = {
-##        'action' : args.action,
-##        'floor' : args.floor,
-##        'bloc' : args.bloc,
-##        'data' : args.data,
-##        'size' : args.size,
-##        'apci' : args.apci
-##        }
-##
-##    dict_payload = {
-##        'gateway' : '127.0.0.1:3671',
-##        'endpoint' : '0.0.0.0:3672',
-##        'action' : 4,
-##        'floor' : 4,
-##        'bloc' : 1,
-##        'data' : 100,
-##        'size' : 2,
-##        'apci' : 2
-##        }
-##
-##    json_payload = json.dumps(dict_payload)
 
 
 
