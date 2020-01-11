@@ -31,6 +31,6 @@ pip3 install -r requirements.txt
 *********************************************************************
 RUNNING THE KNX-CLIENT.PY SCRIPT:
 *************************************************
-python3 knx-client-cloud.py PROJECT_ID REGISTRY_ID DEVICE_ID KEY_PATH ALGORITHM
+python3 knx-client-cloud.py PROJECT_ID REGISTRY_ID DEVICE_ID TOPIC KEY_PATH ALGORITHM
 
-python3 knx-client-cloud.py smarthouseiot-261017 smarthouse piRoom01 rsa_private.pem RS256
+python3 knx-client-cloud.py smarthouseiot-261017 smarthouse serverKNX room01k rsa_private.pem RS256
