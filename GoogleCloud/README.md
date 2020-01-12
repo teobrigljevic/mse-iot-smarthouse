@@ -32,7 +32,7 @@ The IoT Core service additionally offers us the option to create and set Gateway
 The configuration using the Pub/Sub service are self-explanatory, we define topics that are used by the devices and the Google Functions for communication and triggers.
 
 ![Pubs](GoogleMedia/SmartBuildingPubs.png)
-![Subs(GoogleMedia/SmartBuildingSubs.png)
+![Subs](GoogleMedia/SmartBuildingSubs.png)
 
 ## Cloud Functions
 
