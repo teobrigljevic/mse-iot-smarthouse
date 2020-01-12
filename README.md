@@ -29,7 +29,7 @@ The next figure shows the global overview of the interaction between the differe
 
 We show in the next figure a more detailed overview of the infrastructure based on the Google Cloud Platform and Services, including the rooms system and the application used for user control and monitoring.
 
-![GeneralOverview](Media/CoreProcess.png)
+![GeneralOverview](GoogleCloud/GoogleMedia/CoreProcess.png)
 
 The final figure gives a detailed overview of the main internal and communication processes being used in our infrastructure. This view focuses on the processes responsible for sending and reading messages between the different parts of the ecosystem.
 
