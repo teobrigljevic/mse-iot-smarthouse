@@ -1,35 +1,19 @@
-INSTALL KNXNET:
-*************************************************
-***On first use:
+# KNX FOR CLOUD
 
-sudo apt-get update
+The `knx-client-cloud.py` Python 3 script is used. Help and arguments description can be obtained using the `python3 knx-client-cloud.py -h` command.
 
-sudo apt-get install python3-setuptools
+## Running the script
 
-cd knxnet_iot
+The script is easily set up using the command:
 
-sudo python3 setup.py install
-*************************************************
-***Next uses:
+  `python3 knx-client-cloud.py <PROJECT_ID> <REGISTRY_ID> <DEVICE_ID> <TOPIC> <KEY_PATH> <ALGORITHM>`
+  
+For instance, in our case the following command is used for starting the script and targetting the ROOM01:
 
-cd knxnet_iot
+  `python3 knx-client-cloud.py smarthouseiot-261017 smarthouse serverKNX room01k rsa_private.pem RS256`
+  
+# Screens
 
-sudo python3 setup.py install
-*********************************************************************
-*********************************************************************
-INSTALL REQUIREMENTS IN VIRTUAL ENV:
-*************************************************
-***In root folder (KNX_for_cloud)
+![Help][KNXMedia/Help.png]
 
-virtualenv env
-
-source env/bin/activate
-
-pip3 install -r requirements.txt
-*********************************************************************
-*********************************************************************
-RUNNING THE KNX-FOR-CLOUD.PY SCRIPT:
-*************************************************
-python3 knx-client-cloud.py PROJECT_ID REGISTRY_ID DEVICE_ID TOPIC KEY_PATH ALGORITHM
-
-python3 knx-client-cloud.py smarthouseiot-261017 smarthouse serverKNX room01k rsa_private.pem RS256
+![Rooms][KNXMedia/Rooms.png]
