@@ -4,6 +4,5 @@
 </p>  
 </br>  
 <p align="center">  
-  <img width="350" src="Media/MobileApp.jpg">
-  <img  width="350" src="Media/MobileApp2.jpg">
+  <img width="350" src="Media/MobileApp.jpg"> <img  width="350" src="Media/MobileApp2.jpg">
 </p>
