@@ -23,7 +23,11 @@ The figure below gives a simplified view of the considered buidling infrastructu
 
 ![Rooms](Media/Rooms.png)
 
-The next figure shows the global overview of the interaction between the different parts of our system. Separated from the building infrastructure, we use an Android application to give users access to the building information (monitoring, measures from the sensors, state of the blinds/radiators/lights, over-time statistics) and location-based (using BLE Beacons) control. In between, a support layer has been developped using Google Cloud tools, more information provided in the relevant folder of this repository.
+The next figure shows the global overview of the interaction between the different parts of our system. For our application, we separated the KNX and ZWave processes in two distinct devices, making the implementation and development of the infrastructure easier.
+
+Separated from the building infrastructure, we use an Android application to give users access to the building information (monitoring, measures from the sensors, state of the blinds/radiators/lights, over-time statistics) and location-based (using BLE Beacons) control.
+
+In between, a support layer has been developped using Google Cloud Services, more information provided in the relevant folder of this repository.
 
 ![GeneralOverview](Media/GlobalProcess.png)
 
