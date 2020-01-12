@@ -39,6 +39,7 @@ Both the KNX_basic and the KNX_for_cloud resources require the knxnet_iot python
 - On following uses:
 
   `cd knxnet_iot`
+  
   `sudo python3 setup.py install`
   
 ## Actuasim
@@ -49,13 +50,17 @@ Both the KNX_basic and the KNX_for_cloud resources require the Actuasim simulato
 
 - On first use:
   `sudo apt-get update`
+  
   `sudo apt-get install python3-pyqt5`
+  
   `cd actuasim_iot`
+  
   `python3 actuasim.py`
   
 - Next uses:
   
   `cd actuasim_iot`
+  
   `python3 actuasim.py`
   
 ## Requirements for the Cloud infrastructure
