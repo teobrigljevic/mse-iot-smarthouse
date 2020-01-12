@@ -21,4 +21,12 @@ Refer to https://cloud.google.com/iot/docs/samples/end-to-end-sample
 
 ## RUNNING THE zwave-for-cloud.py SCRIPT:
 
-python3 zwave-for-cloud.py (default parameters in the code) 
+python3 zwave-for-cloud.py (default parameters in the code)  
+
+****
+
+![Output1](Media/output1.png)  
+
+*****
+
+![Output2](Media/output2.png)
