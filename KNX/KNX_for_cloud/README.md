@@ -14,6 +14,6 @@ For instance, in our case the following command is used for starting the script 
   
 # Screens
 
-![Help][KNXMedia/Help.png]
+![Help](KNXMedia/Help.png)
 
-![Rooms][KNXMedia/Rooms.png]
+![Rooms](KNXMedia/Rooms.png)
