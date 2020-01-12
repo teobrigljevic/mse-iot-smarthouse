@@ -1,17 +1,31 @@
 *********************************************************************
-INSTALL KNXNET:
-*************************************************
-On first use:
-sudo apt-get update
-sudo apt-get install python3-setuptools
-cd knxnet_iot
-sudo python3 setup.py install
-*************************************************
-Next uses:
-cd knxnet_iot
-sudo python3 setup.py install
+zwave-for-cloud.py
+*********************************************************************
+*******************
+Components
+*******************
+Raspberry Pi 3B+
+Z-Stick Gen5 Aeotec
+Multisensor 6 Aeotec
+LED light Bulb Domitech
+
+*******************
+Requirements Zwave
+*******************
+For Python OpenZwave refer to https://github.com/OpenZWave/python-openzwave
+Use openzwave library : 1.4.3428
+Use python library : 0.4.19
+Use ZWave library : Static Controller version Z-Wave 4.54
+
+*******************
+Requirements MQTT
+*******************
+Install requirements.txt
+Refer to https://cloud.google.com/iot/docs/samples/end-to-end-sample
+
+
 *********************************************************************
 *********************************************************************
-RUNNING THE KNX-CLIENT.PY SCRIPT:
+RUNNING THE zwave-for-cloud.py SCRIPT:
 *************************************************
-python3 knx-client.py ACTION FLOOR BLOC DATA SIZE APCI
+python3 zwave-for-cloud.py (default parameters in the code) 
