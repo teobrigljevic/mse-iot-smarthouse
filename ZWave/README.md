@@ -25,8 +25,8 @@ python3 zwave-for-cloud.py (default parameters in the code)
 
 ****
 
-![Output1](Media/output1.png)  
+![Output1](Media/raspberryOutput.png)  
 
 *****
 
-![Output2](Media/output2.png)
+![Output2](Media/raspberryOutput2.png)
