@@ -1,5 +1,4 @@
 # Android mobile application
 
-![Mobile app diagram](Media/DiagramSmartBuildingMobApp.png | width=48) 
+<img align="left" width="100" src="Media/DiagramSmartBuildingMobApp.png">
 
-![Mobile app screenshoot](Media/MobileApp.jpg | width=48)
