@@ -27,11 +27,7 @@ The next figure shows the global overview of the interaction between the differe
 
 Separated from the building infrastructure, we use an Android application to give users access to the building information (monitoring, measures from the sensors, state of the blinds/radiators/lights, over-time statistics) and location-based (using BLE Beacons) control.
 
-In between, a support layer has been developped using Google Cloud Services, more information provided in the relevant folder of this repository.
-
-![GeneralOverview](Media/GlobalProcess.png)
-
-We show in the next figure a more detailed overview of the infrastructure based on the Google Cloud Platform and Services, including the rooms system and the application used for user control and monitoring.
+In between, a support layer has been developped using the Google Cloud Platform and Services, including the rooms system and the application used for user control and monitoring. More information are provided in the relevant folder of this repository.
 
 ![GeneralOverview](GoogleCloud/GoogleMedia/CoreProcess.png)
 
