@@ -97,4 +97,4 @@ The structure of the database is a follows:
 
 This final figure sums up the different tools and services used in our application based on the Google Cloud Platform.
 
-![Cloud](GoogleMedia/Cloud.png)
+![Cloud](GoogleMedia/SmartBuildingCloud.png)
