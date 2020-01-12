@@ -65,7 +65,7 @@ The functions are responsible for different processes:
 
 We elected to place the processing logic managing the blinds and radiator valves, both automated and manually set by the user, in our kFunctions. The diagram below shows this logic behind for the computation of the updates.
 
-Lorem ipsum dolor.
+![KNXLogic](GoogleMedia/SmartBuildingKNXLogic.png)
 
 ## Stackdriver logging
 
