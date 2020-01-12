@@ -24,9 +24,10 @@ Refer to https://cloud.google.com/iot/docs/samples/end-to-end-sample
 python3 zwave-for-cloud.py (default parameters in the code)  
 
 ****
-
+## Output of the script
+##### Devices detection
 ![Output1](Media/raspberryOutput.png)  
 
 *****
-
+##### Reception of configuration for the lamp and publish of sensors data
 ![Output2](Media/raspberryOutput2.png)
